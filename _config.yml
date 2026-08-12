@@ -103,4 +103,4 @@ theme: redefine
 deploy:
   type: git
   repo: https://github.com/771835/771835.github.io.git
-  branch: main
+  branch: gh-pages
