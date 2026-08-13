@@ -1,8 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>在 Minecraft 里实现 OOP 的一些想法</title>
+    <url>/2026/08/13/%E5%9C%A8-Minecraft-%E9%87%8C%E5%AE%9E%E7%8E%B0-OOP-%E7%9A%84%E4%B8%80%E4%BA%9B%E6%83%B3%E6%B3%95/</url>
+    <content><![CDATA[起因Dovetail 的 OOP 一直是缺少实现，只有空话的。所以 最近在讨论 Dovetail 要不要引入 OOP 支持， 顺带聊了多态、 RTTI、虚函数表在Minecraft 环境下怎么实现。 以下是一些不成熟的设想，以实际实现为准（
+多态的两种初步方案背景伪代码：
+class Base:    def kill(self): passclass Cat(Base):    def kill(self): print(&quot;Killing cat&quot;)class Dog(Base):    def kill(self): print(&quot;Killing dog&quot;)def kill(obj: Base):    obj.kill()
+
+方案一：编译器展开 isinstance 分支obj.kill () 在编译时展开为：
+if type(obj) == Cat:    Cat.kill(obj)elif type(obj) == Dog:    Dog.kill(obj)
+
+
+优点：简单
+缺点：子类数量一多，生成代码膨胀，性能堪忧
+
+方案二：类型表 + 继承链表（基于函数路径）Lua 风格伪代码：
+Base = &#123; foo = &quot;base/foo&quot; &#125;Cat  = &#123; foo = &quot;base/foo&quot;, kill = &quot;cat/kill&quot; &#125;Dog  = &#123; foo = &quot;dog/foo&quot;,  kill = &quot;dog/kill&quot; &#125;types = &#123; [1]=Base, [2]=Cat, [3]=Dog &#125;super = &#123; [2]=&#123;1&#125;, [3]=&#123;1&#125; &#125;-- obj.kill() 编译为：-- types[obj.type].kill
+
+每个对象携带整数类型 ID，调用时查 types 表拿到方法路径，再执行。 继承链通过 super 表记录，编译期通过C3算法线性化继承链，查找时沿着线性链查找。同时无子类的类直接编译期内联，跳过查表
+Minecraft 环境的特殊性
+MC 没有指针，跳表通过函数路径 + function 宏模拟
+跨编译单元的多态暂属 UB，OOP 类型设想不允许跨模块导出
+
+未解决的问题&#x2F;摆烂的部分分离编译：两个文件各自继承 Base 分别编译，任意一方无法感知对方子类，所以这些操作通通按 UB 处理qwq
+总结MC 环境太特殊，标准 C++ 那套拿过来不能直接用。 最终方案大概是：类型表 + 继承链表 + 编译期内联优化混合的史山w。
+鸣谢感谢 4424 大佬提供的思路
+]]></content>
+      <categories>
+        <category>OOP</category>
+      </categories>
+      <tags>
+        <tag>dovetail</tag>
+        <tag>minecraft</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Hello World</title>
-    <url>/2026/08/12/hello-world/</url>
+    <url>/2026/08/13/hello-world/</url>
     <content><![CDATA[Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub.
 Quick StartCreate a new post$ hexo new &quot;My New Post&quot;
 

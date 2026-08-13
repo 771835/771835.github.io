@@ -84,7 +84,7 @@
     
     <!--- Seo Part-->
     
-    <link rel="canonical" href="https://771835.github.io/404.html"/>
+    <link rel="canonical" href="https://771835.github.io/2026/08/13/在-minecraft-里实现-oop-的一些想法/"/>
     <meta name="robots" content="index,follow">
     <meta name="googlebot" content="index,follow">
     <meta name="revisit-after" content="1 days">
@@ -92,14 +92,18 @@
     
         
         <meta name="description" content="一个混吃等死的废物喵。">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Page Not Found">
-<meta property="og:url" content="https://771835.github.io/404.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="在 Minecraft 里实现 OOP 的一些想法">
+<meta property="og:url" content="https://771835.github.io/2026/08/13/%E5%9C%A8-Minecraft-%E9%87%8C%E5%AE%9E%E7%8E%B0-OOP-%E7%9A%84%E4%B8%80%E4%BA%9B%E6%83%B3%E6%B3%95/index.html">
 <meta property="og:site_name" content="Hexo">
 <meta property="og:description" content="一个混吃等死的废物喵。">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://771835.github.io/images/redefine-og.webp">
+<meta property="article:published_time" content="2026-08-13T22:58:54.000Z">
+<meta property="article:modified_time" content="2026-08-13T15:38:29.055Z">
 <meta property="article:author" content="John Doe">
+<meta property="article:tag" content="dovetail">
+<meta property="article:tag" content="minecraft">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://771835.github.io/images/redefine-og.webp">
     
@@ -113,7 +117,7 @@
     
     <title>
         
-            Page Not Found | 771835的博客
+            在 Minecraft 里实现 OOP 的一些想法 | 771835的博客
         
     </title>
 
@@ -437,13 +441,208 @@
 			
 
 			<div class="main-content">
-				<div class="nf-container">
-    <div class="nf-text">
-        <h1>404<br>Page Not Found</h1>
-    </div>
-    <div class="nf-button">
-        <a href="/" class="button large center"><i class="fa-regular fa-house"></i> 回到首页</a>
-    </div>
+				<div class="post-page-container flex relative justify-between box-border w-full h-full">
+	<div class="article-content-container">
+
+		<div class="article-title relative w-full">
+			
+			<div class="w-full flex items-center pt-6 justify-start">
+				<h1 class="article-title-regular text-second-text-color tracking-tight text-4xl md:text-6xl font-semibold px-2 sm:px-6 md:px-8 py-3">在 Minecraft 里实现 OOP 的一些想法</h1>
+			</div>
+			
+		</div>
+
+		
+		<div class="article-header flex flex-row gap-2 items-center px-2 sm:px-6 md:px-8">
+			<div class="avatar w-[46px] h-[46px] shrink-0 rounded-medium border border-border-color p-px">
+				<img src="https://api.dicebear.com/7.x/bottts-neutral/svg?seed=771835">
+			</div>
+			<div class="info flex flex-col justify-between">
+				<div class="author flex items-center">
+					<span class="name text-default-text-color text-lg font-semibold">771835</span>
+					
+					<span class="author-label ml-1.5 text-xs px-2 py-0.5 rounded-small text-third-text-color border border-shadow-color-1">Lv1</span>
+					
+				</div>
+				<div class="meta-info">
+					<div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fa-regular fa-pen-fancy"></i>&nbsp;
+        <span class="desktop">2026-08-13 22:58:54</span>
+        <span class="mobile">2026-08-13 22:58:54</span>
+        <span class="hover-info">创建</span>
+    </span>
+    
+        <span class="article-date article-meta-item">
+            <i class="fa-regular fa-wrench"></i>&nbsp;
+            <span class="desktop">2026-08-13 15:38:29</span>
+            <span class="mobile">2026-08-13 15:38:29</span>
+            <span class="hover-info">更新</span>
+        </span>
+    
+
+    
+        <span class="article-categories article-meta-item">
+            <i class="fa-regular fa-folders"></i>&nbsp;
+            <ul>
+                
+                
+                    
+                        
+                        <li>
+                            <a href="/categories/OOP/">OOP</a>&nbsp;
+                        </li>
+                    
+                    
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fa-regular fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/tags/dovetail/">dovetail</a>&nbsp;
+                    </li>
+                
+                    <li>
+                        | <a href="/tags/minecraft/">minecraft</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+    
+    
+        <span class="article-pv article-meta-item">
+            <i class="fa-regular fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+        </span>
+    
+</div>
+
+				</div>
+			</div>
+		</div>
+		
+
+		
+
+
+		<div class="article-content markdown-body px-2 sm:px-6 md:px-8 pb-8">
+			<h2 id="起因"><a href="#起因" class="headerlink" title="起因"></a>起因</h2><p>Dovetail 的 OOP 一直是缺少实现，只有空话的。所以 最近在讨论 Dovetail 要不要引入 OOP 支持， 顺带聊了多态、 RTTI、虚函数表在<br>Minecraft 环境下怎么实现。 以下是一些不成熟的设想，以实际实现为准（</p>
+<h2 id="多态的两种初步方案"><a href="#多态的两种初步方案" class="headerlink" title="多态的两种初步方案"></a>多态的两种初步方案</h2><p>背景伪代码：</p>
+<div class="code-container" data-rel="Python"><figure class="iseeu highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Base</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">kill</span>(<span class="params">self</span>): <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Cat</span>(<span class="title class_ inherited__">Base</span>):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">kill</span>(<span class="params">self</span>): <span class="built_in">print</span>(<span class="string">&quot;Killing cat&quot;</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Dog</span>(<span class="title class_ inherited__">Base</span>):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">kill</span>(<span class="params">self</span>): <span class="built_in">print</span>(<span class="string">&quot;Killing dog&quot;</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">kill</span>(<span class="params">obj: Base</span>):</span><br><span class="line">    obj.kill()</span><br></pre></td></tr></table></figure></div>
+
+<h3 id="方案一：编译器展开-isinstance-分支"><a href="#方案一：编译器展开-isinstance-分支" class="headerlink" title="方案一：编译器展开 isinstance 分支"></a>方案一：编译器展开 isinstance 分支</h3><p>obj.kill () 在编译时展开为：</p>
+<div class="code-container" data-rel="Python"><figure class="iseeu highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> <span class="built_in">type</span>(obj) == Cat:</span><br><span class="line">    Cat.kill(obj)</span><br><span class="line"><span class="keyword">elif</span> <span class="built_in">type</span>(obj) == Dog:</span><br><span class="line">    Dog.kill(obj)</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>优点：简单</li>
+<li>缺点：子类数量一多，生成代码膨胀，性能堪忧</li>
+</ul>
+<h3 id="方案二：类型表-继承链表（基于函数路径）"><a href="#方案二：类型表-继承链表（基于函数路径）" class="headerlink" title="方案二：类型表 + 继承链表（基于函数路径）"></a>方案二：类型表 + 继承链表（基于函数路径）</h3><p>Lua 风格伪代码：</p>
+<div class="code-container" data-rel="Lua"><figure class="iseeu highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">Base = &#123; foo = <span class="string">&quot;base/foo&quot;</span> &#125;</span><br><span class="line">Cat  = &#123; foo = <span class="string">&quot;base/foo&quot;</span>, kill = <span class="string">&quot;cat/kill&quot;</span> &#125;</span><br><span class="line">Dog  = &#123; foo = <span class="string">&quot;dog/foo&quot;</span>,  kill = <span class="string">&quot;dog/kill&quot;</span> &#125;</span><br><span class="line"></span><br><span class="line">types = &#123; [<span class="number">1</span>]=Base, [<span class="number">2</span>]=Cat, [<span class="number">3</span>]=Dog &#125;</span><br><span class="line">super = &#123; [<span class="number">2</span>]=&#123;<span class="number">1</span>&#125;, [<span class="number">3</span>]=&#123;<span class="number">1</span>&#125; &#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- obj.kill() 编译为：</span></span><br><span class="line"><span class="comment">-- types[obj.type].kill</span></span><br></pre></td></tr></table></figure></div>
+
+<p>每个对象携带整数类型 ID，调用时查 types 表拿到方法路径，再执行。 继承链通过 super 表记录，编译期通过C3算法线性化继承链，查找时沿着线性链查找。<br>同时无子类的类直接编译期内联，跳过查表</p>
+<h2 id="Minecraft-环境的特殊性"><a href="#Minecraft-环境的特殊性" class="headerlink" title="Minecraft 环境的特殊性"></a>Minecraft 环境的特殊性</h2><ul>
+<li>MC 没有指针，跳表通过函数路径 + function 宏模拟</li>
+<li>跨编译单元的多态暂属 UB，OOP 类型设想不允许跨模块导出</li>
+</ul>
+<h2 id="未解决的问题-摆烂的部分"><a href="#未解决的问题-摆烂的部分" class="headerlink" title="未解决的问题&#x2F;摆烂的部分"></a>未解决的问题&#x2F;摆烂的部分</h2><p>分离编译：两个文件各自继承 Base 分别编译，任意一方无法感知对方子类，所以这些操作通通按 UB 处理qwq</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>MC 环境太特殊，标准 C++ 那套拿过来不能直接用。 最终方案大概是：类型表 + 继承链表 + 编译期内联优化混合的史山w。</p>
+<h2 id="鸣谢"><a href="#鸣谢" class="headerlink" title="鸣谢"></a>鸣谢</h2><p>感谢 4424 大佬提供的思路</p>
+
+		</div>
+
+		
+		<div class="post-copyright-info w-full my-8 px-2 sm:px-6 md:px-8">
+			<div class="article-copyright-info-container">
+    <ul>
+        <li><strong>标题:</strong> 在 Minecraft 里实现 OOP 的一些想法</li>
+        <li><strong>作者:</strong> 771835</li>
+        <li><strong>创建于
+                :</strong> 2026-08-13 22:58:54</li>
+        
+            <li>
+                <strong>更新于
+                    :</strong> 2026-08-13 15:38:29
+            </li>
+        
+        <li>
+            <strong>链接:</strong> https://771835.github.io/2026/08/13/在-Minecraft-里实现-OOP-的一些想法/
+        </li>
+        <li>
+            <strong>
+                版权声明:
+            </strong>
+            
+
+            
+                本文章采用 <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0">CC BY-NC-SA 4.0</a> 进行许可。
+            
+        </li>
+    </ul>
+</div>
+
+		</div>
+		
+
+		
+		<ul class="post-tags-box text-lg mt-1.5 flex-wrap justify-center flex md:hidden">
+			
+			<li class="tag-item mx-0.5">
+				<a href="/tags/dovetail/">#dovetail</a>&nbsp;
+			</li>
+			
+			<li class="tag-item mx-0.5">
+				<a href="/tags/minecraft/">#minecraft</a>&nbsp;
+			</li>
+			
+		</ul>
+		
+
+		
+
+		
+		<div class="article-nav my-8 flex justify-between items-center px-2 sm:px-6 md:px-8">
+			
+			
+			<div class="article-next border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
+				<a class="next" rel="next" href="/2026/08/13/hello-world/">
+					<span class="title flex justify-center items-center">
+						<span class="post-nav-title-item truncate max-w-48">Hello World</span>
+						<span class="post-nav-item">下一篇</span>
+					</span>
+					<span class="right arrow-icon flex justify-center items-center">
+						<i class="fa-solid fa-chevron-right"></i>
+					</span>
+				</a>
+			</div>
+			
+		</div>
+		
+
+
+		
+	</div>
+
+	
+	<div class="toc-content-container">
+		<div class="post-toc-wrap">
+	<div class="post-toc">
+		<div class="toc-title">目录</div>
+		<div class="page-title">在 Minecraft 里实现 OOP 的一些想法</div>
+		<ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%B5%B7%E5%9B%A0"><span class="nav-text">起因</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A4%9A%E6%80%81%E7%9A%84%E4%B8%A4%E7%A7%8D%E5%88%9D%E6%AD%A5%E6%96%B9%E6%A1%88"><span class="nav-text">多态的两种初步方案</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%B9%E6%A1%88%E4%B8%80%EF%BC%9A%E7%BC%96%E8%AF%91%E5%99%A8%E5%B1%95%E5%BC%80-isinstance-%E5%88%86%E6%94%AF"><span class="nav-text">方案一：编译器展开 isinstance 分支</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%B9%E6%A1%88%E4%BA%8C%EF%BC%9A%E7%B1%BB%E5%9E%8B%E8%A1%A8-%E7%BB%A7%E6%89%BF%E9%93%BE%E8%A1%A8%EF%BC%88%E5%9F%BA%E4%BA%8E%E5%87%BD%E6%95%B0%E8%B7%AF%E5%BE%84%EF%BC%89"><span class="nav-text">方案二：类型表 + 继承链表（基于函数路径）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Minecraft-%E7%8E%AF%E5%A2%83%E7%9A%84%E7%89%B9%E6%AE%8A%E6%80%A7"><span class="nav-text">Minecraft 环境的特殊性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%AA%E8%A7%A3%E5%86%B3%E7%9A%84%E9%97%AE%E9%A2%98-%E6%91%86%E7%83%82%E7%9A%84%E9%83%A8%E5%88%86"><span class="nav-text">未解决的问题&#x2F;摆烂的部分</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-text">总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%B8%A3%E8%B0%A2"><span class="nav-text">鸣谢</span></a></li></ol>
+
+	</div>
+</div>
+	</div>
+	
 </div>
 
 			</div>
@@ -523,6 +722,22 @@
 		</div>
 	</div>
 
+	
+	<div class="post-tools">
+		<div class="post-tools-container">
+	<ul class="article-tools-list">
+		<!-- TOC aside toggle -->
+		
+		<li class="right-bottom-tools page-aside-toggle">
+			<i class="fa-regular fa-outdent"></i>
+		</li>
+		
+
+		<!-- go comment -->
+		
+	</ul>
+</div>
+	</div>
 	
 
 	<div class="right-side-tools-container">
@@ -635,6 +850,7 @@
         }),
     );
 </script>
+
 
 
 
