@@ -213,6 +213,9 @@ navbar:
     Home: 
       path: / 
       icon: fa-regular fa-house # can be empty
+    说说:
+      path: /essays/
+      icon: fa-regular fa-comment
     归档: 
       path: /archives 
       icon: fa-regular fa-archive # can be empty
@@ -519,3 +522,7 @@ developer:
   # Whether to enable developer mode (only for developers who want to modify the theme source code, not for ordinary users)
   enable: false
 # DEVELOPER MODE <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< end
+
+essays:
+  - content: 喵喵喵?写条说说都要在配置文件里改，好麻烦。
+    date: 2025-08-14
