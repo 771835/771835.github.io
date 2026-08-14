@@ -5,7 +5,7 @@ tags:
   - dovetail
   - minecraft
 categories:
-  - OOP
+  - Minecraft Datapack
 ---
 
 ## 起因
