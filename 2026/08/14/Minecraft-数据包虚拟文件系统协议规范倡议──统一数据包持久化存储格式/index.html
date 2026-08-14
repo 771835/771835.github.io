@@ -84,7 +84,7 @@
     
     <!--- Seo Part-->
     
-    <link rel="canonical" href="https://771835.github.io/2026/08/13/在-minecraft-里实现-oop-的一些想法/"/>
+    <link rel="canonical" href="https://771835.github.io/2026/08/14/minecraft-数据包虚拟文件系统协议规范倡议──统一数据包持久化存储格式/"/>
     <meta name="robots" content="index,follow">
     <meta name="googlebot" content="index,follow">
     <meta name="revisit-after" content="1 days">
@@ -93,17 +93,20 @@
         
         <meta name="description" content="一个混吃等死的废物喵。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="在 Minecraft 里实现 OOP 的一些想法">
-<meta property="og:url" content="https://771835.github.io/2026/08/13/%E5%9C%A8-Minecraft-%E9%87%8C%E5%AE%9E%E7%8E%B0-OOP-%E7%9A%84%E4%B8%80%E4%BA%9B%E6%83%B3%E6%B3%95/index.html">
+<meta property="og:title" content="Minecraft 数据包虚拟文件系统协议规范倡议──统一数据包持久化存储格式">
+<meta property="og:url" content="https://771835.github.io/2026/08/14/Minecraft-%E6%95%B0%E6%8D%AE%E5%8C%85%E8%99%9A%E6%8B%9F%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E5%8D%8F%E8%AE%AE%E8%A7%84%E8%8C%83%E5%80%A1%E8%AE%AE%E2%94%80%E2%94%80%E7%BB%9F%E4%B8%80%E6%95%B0%E6%8D%AE%E5%8C%85%E6%8C%81%E4%B9%85%E5%8C%96%E5%AD%98%E5%82%A8%E6%A0%BC%E5%BC%8F/index.html">
 <meta property="og:site_name" content="Hexo">
 <meta property="og:description" content="一个混吃等死的废物喵。">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://771835.github.io/images/redefine-og.webp">
-<meta property="article:published_time" content="2026-08-13T22:58:54.000Z">
+<meta property="article:published_time" content="2026-08-14T03:26:57.000Z">
 <meta property="article:modified_time" content="2026-08-14T20:04:47.520Z">
 <meta property="article:author" content="John Doe">
-<meta property="article:tag" content="dovetail">
+<meta property="article:tag" content="datapack">
 <meta property="article:tag" content="minecraft">
+<meta property="article:tag" content="protocol">
+<meta property="article:tag" content="spec">
+<meta property="article:tag" content="vfs">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://771835.github.io/images/redefine-og.webp">
     
@@ -117,7 +120,7 @@
     
     <title>
         
-            在 Minecraft 里实现 OOP 的一些想法 | 771835的博客
+            Minecraft 数据包虚拟文件系统协议规范倡议──统一数据包持久化存储格式 | 771835的博客
         
     </title>
 
@@ -484,7 +487,7 @@
 		<div class="article-title relative w-full">
 			
 			<div class="w-full flex items-center pt-6 justify-start">
-				<h1 class="article-title-regular text-second-text-color tracking-tight text-4xl md:text-6xl font-semibold px-2 sm:px-6 md:px-8 py-3">在 Minecraft 里实现 OOP 的一些想法</h1>
+				<h1 class="article-title-regular text-second-text-color tracking-tight text-4xl md:text-6xl font-semibold px-2 sm:px-6 md:px-8 py-3">Minecraft 数据包虚拟文件系统协议规范倡议──统一数据包持久化存储格式</h1>
 			</div>
 			
 		</div>
@@ -505,8 +508,8 @@
 					<div class="article-meta-info">
     <span class="article-date article-meta-item">
         <i class="fa-regular fa-pen-fancy"></i>&nbsp;
-        <span class="desktop">2026-08-13 22:58:54</span>
-        <span class="mobile">2026-08-13 22:58:54</span>
+        <span class="desktop">2026-08-14 03:26:57</span>
+        <span class="mobile">2026-08-14 03:26:57</span>
         <span class="hover-info">创建</span>
     </span>
     
@@ -545,7 +548,19 @@
                     </li>
                 
                     <li>
-                        | <a href="/tags/dovetail/">dovetail</a>&nbsp;
+                        | <a href="/tags/datapack/">datapack</a>&nbsp;
+                    </li>
+                
+                    <li>
+                        | <a href="/tags/vfs/">vfs</a>&nbsp;
+                    </li>
+                
+                    <li>
+                        | <a href="/tags/protocol/">protocol</a>&nbsp;
+                    </li>
+                
+                    <li>
+                        | <a href="/tags/spec/">spec</a>&nbsp;
                     </li>
                 
             </ul>
@@ -571,25 +586,229 @@
 
 
 		<div class="article-content markdown-body px-2 sm:px-6 md:px-8 pb-8">
-			<h2 id="起因"><a href="#起因" class="headerlink" title="起因"></a>起因</h2><p>Dovetail 的 OOP 一直是缺少实现，只有空话的。所以 最近在讨论 Dovetail 要不要引入 OOP 支持， 顺带聊了多态、 RTTI、虚函数表在<br>Minecraft 环境下怎么实现。 以下是一些不成熟的设想，以实际实现为准（</p>
-<h2 id="多态的两种初步方案"><a href="#多态的两种初步方案" class="headerlink" title="多态的两种初步方案"></a>多态的两种初步方案</h2><p>背景伪代码：</p>
-<div class="code-container" data-rel="Python"><figure class="iseeu highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Base</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">kill</span>(<span class="params">self</span>): <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Cat</span>(<span class="title class_ inherited__">Base</span>):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">kill</span>(<span class="params">self</span>): <span class="built_in">print</span>(<span class="string">&quot;Killing cat&quot;</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Dog</span>(<span class="title class_ inherited__">Base</span>):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">kill</span>(<span class="params">self</span>): <span class="built_in">print</span>(<span class="string">&quot;Killing dog&quot;</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">kill</span>(<span class="params">obj: Base</span>):</span><br><span class="line">    obj.kill()</span><br></pre></td></tr></table></figure></div>
-<h3 id="方案一：编译器展开-isinstance-分支"><a href="#方案一：编译器展开-isinstance-分支" class="headerlink" title="方案一：编译器展开 isinstance 分支"></a>方案一：编译器展开 isinstance 分支</h3><p>obj.kill () 在编译时展开为：</p>
-<div class="code-container" data-rel="Python"><figure class="iseeu highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> <span class="built_in">type</span>(obj) == Cat:</span><br><span class="line">    Cat.kill(obj)</span><br><span class="line"><span class="keyword">elif</span> <span class="built_in">type</span>(obj) == Dog:</span><br><span class="line">    Dog.kill(obj)</span><br></pre></td></tr></table></figure></div>
+			<h2 id="背景与动机"><a href="#背景与动机" class="headerlink" title="背景与动机"></a>背景与动机</h2><p>当前 Minecraft 数据包（Datapack）对于游戏内数据存储普遍采用<code>data</code>与<code>scoreboard</code>指令的方式手动存储数据，这种方式存在以下问题：</p>
+<ol>
+<li><strong>数据组织碎片化</strong>：每个数据包自行决定 storage 路径和 scoreboard objective 命名，无统一规范，冲突频发。</li>
+<li><strong>跨包数据交换困难</strong>：数据包 A 无法以标准方式发现和访问数据包 B 的数据，只能靠硬编码 storage 名约定。</li>
+<li><strong>数据生命周期不可追踪</strong>：storage 中的数据无元信息（创建时间、修改时间、类型），调试时只能盲猜。</li>
+</ol>
+<p>这种方式难以追踪和管理数据，且多个数据包之间难以统一的方式修改数据和交换数据，游戏外工具也难以方便地管理数据。</p>
+<p>本文提出 <strong>Minecraft 数据包虚拟文件系统协议（MCVFS）</strong>，本质上是 <strong>对 <code>data storage</code> 中 NBT 数据的标准化组织方案</strong>，而非在<br>MC 内部实现一个真正的文件系统。协议包含两个层面：</p>
+<ol>
+<li><strong>节点树序列化格式</strong>：统一的 JSON 结构，用于工具链间数据交换与编译产物快照。</li>
+<li><strong>原生 MCF API</strong>：一组标准 <code>.mcfunction</code> 函数，在运行时通过 <code>data</code> 指令操作 storage 中的 VFS 节点树。</li>
+</ol>
+<hr>
+<h2 id="一、核心概念"><a href="#一、核心概念" class="headerlink" title="一、核心概念"></a>一、核心概念</h2><h3 id="1-1-什么是”虚拟文件系统”"><a href="#1-1-什么是”虚拟文件系统”" class="headerlink" title="1.1 什么是”虚拟文件系统”"></a>1.1 什么是”虚拟文件系统”</h3><p>MCVFS <strong>不是</strong>一个真正的文件系统。MC 没有文件系统 API，没有指针，没有系统调用。 MCVFS 的实质是 <strong>一套约定</strong>，安全的操作 <code>NBT</code><br>以模拟真实的文件系统。<br>MCVFS 是全局单例，仅由首个加载的数据包初始化。</p>
+<p>“文件”、”目录”、”路径”等术语原意指代真实文件系统中的内容，此处是 <strong>对 NBT 节点的别称</strong>，便于理解和规范数据布局。</p>
+<h3 id="1-2-与-data-scoreboard-指令的关系"><a href="#1-2-与-data-scoreboard-指令的关系" class="headerlink" title="1.2 与 data/scoreboard 指令的关系"></a>1.2 与 data/scoreboard 指令的关系</h3><p>MCVFS <strong>不取代</strong> <code>data</code> 和 <code>scoreboard</code> 指令，仅作为提供标准访问函数的数据存储与交互工具。</p>
+<hr>
+<h2 id="二、节点树数据结构"><a href="#二、节点树数据结构" class="headerlink" title="二、节点树数据结构"></a>二、节点树数据结构</h2><h3 id="2-1-节点定义"><a href="#2-1-节点定义" class="headerlink" title="2.1 节点定义"></a>2.1 节点定义</h3><p>每个 VFS 节点是一个 NBT Compound，统一结构如下：</p>
+<div class="code-container" data-rel="Json5"><figure class="iseeu highlight json5"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="comment">// &quot;directory&quot; | &quot;file&quot; | &quot;symlink&quot;</span></span><br><span class="line">  <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;directory&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;stat&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;size&quot;</span><span class="punctuation">:</span> <span class="number">0</span><span class="punctuation">,</span></span><br><span class="line">    <span class="comment">// 游戏刻时间戳（tick），非 Unix 时间戳</span></span><br><span class="line">    <span class="attr">&quot;mtime&quot;</span><span class="punctuation">:</span> <span class="number">0</span><span class="punctuation">,</span></span><br><span class="line">    <span class="comment">// 创建刻</span></span><br><span class="line">    <span class="attr">&quot;ctime&quot;</span><span class="punctuation">:</span> <span class="number">0</span><span class="punctuation">,</span></span><br><span class="line">    <span class="comment">// 创建者标识</span></span><br><span class="line">    <span class="attr">&quot;owner&quot;</span><span class="punctuation">:</span> <span class="string">&quot;vfs&quot;</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure></div>
 <ul>
-<li>优点：简单</li>
-<li>缺点：子类数量一多，生成代码膨胀，性能堪忧</li>
+<li>时间戳使用 <strong>游戏刻</strong>（<code>gametime</code>），通过 <code>execute store ... run time query gametime</code> 获取。</li>
+<li><code>owner</code> 记录创建该节点的标识，用于多包场景下的权限边界。</li>
+<li><code>size</code> 仅对 file 节点有意义，目录固定为 <code>0</code>。</li>
 </ul>
-<h3 id="方案二：类型表-继承链表（基于函数路径）"><a href="#方案二：类型表-继承链表（基于函数路径）" class="headerlink" title="方案二：类型表 + 继承链表（基于函数路径）"></a>方案二：类型表 + 继承链表（基于函数路径）</h3><p>Lua 风格伪代码：</p>
-<div class="code-container" data-rel="Lua"><figure class="iseeu highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">Base = &#123; foo = <span class="string">&quot;base/foo&quot;</span> &#125;</span><br><span class="line">Cat  = &#123; foo = <span class="string">&quot;base/foo&quot;</span>, kill = <span class="string">&quot;cat/kill&quot;</span> &#125;</span><br><span class="line">Dog  = &#123; foo = <span class="string">&quot;dog/foo&quot;</span>,  kill = <span class="string">&quot;dog/kill&quot;</span> &#125;</span><br><span class="line"></span><br><span class="line">types = &#123; [<span class="number">1</span>]=Base, [<span class="number">2</span>]=Cat, [<span class="number">3</span>]=Dog &#125;</span><br><span class="line">super = &#123; [<span class="number">2</span>]=&#123;<span class="number">1</span>&#125;, [<span class="number">3</span>]=&#123;<span class="number">1</span>&#125; &#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- obj.kill() 编译为：</span></span><br><span class="line"><span class="comment">-- types[obj.type].kill</span></span><br></pre></td></tr></table></figure></div>
-<p>每个对象携带整数类型 ID，调用时查 types 表拿到方法路径，再执行。 继承链通过 super 表记录，编译期通过C3算法线性化继承链，查找时沿着线性链查找。<br>同时无子类的类直接编译期内联，跳过查表</p>
-<h2 id="Minecraft-环境的特殊性"><a href="#Minecraft-环境的特殊性" class="headerlink" title="Minecraft 环境的特殊性"></a>Minecraft 环境的特殊性</h2><ul>
-<li>MC 没有指针，跳表通过函数路径 + function 宏模拟</li>
-<li>跨编译单元的多态暂属 UB，OOP 类型设想不允许跨模块导出</li>
+<h3 id="2-2-目录节点"><a href="#2-2-目录节点" class="headerlink" title="2.2 目录节点"></a>2.2 目录节点</h3><div class="code-container" data-rel="Json5"><figure class="iseeu highlight json5"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;directory&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;stat&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;size&quot;</span><span class="punctuation">:</span> <span class="number">0</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;mtime&quot;</span><span class="punctuation">:</span> <span class="number">0</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;ctime&quot;</span><span class="punctuation">:</span> <span class="number">0</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;owner&quot;</span><span class="punctuation">:</span> <span class="string">&quot;vfs&quot;</span></span><br><span class="line">  <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;children&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;config.json&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;file&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;stat&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        ...</span><br><span class="line">      <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;content&quot;</span><span class="punctuation">:</span> <span class="string">&quot;&#123;...NBT...&#125;&quot;</span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;players&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;directory&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;stat&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        ...</span><br><span class="line">      <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;children&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        ...</span><br><span class="line">      <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line">  <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="comment">// _index 由 API 函数在增删子节点时自动维护</span></span><br><span class="line">  <span class="attr">&quot;_index&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="string">&quot;a&quot;</span><span class="punctuation">,</span> <span class="string">&quot;b&quot;</span><span class="punctuation">]</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure></div>
+<ul>
+<li><code>children</code> 为 NBT Compound，键为节点名（即”文件名”），值为子节点。</li>
+<li>空目录的 <code>children</code> 为空 Compound <code>{}</code>。</li>
+<li><strong>NBT 路径对应文件路径</strong>：<code>root.children.config.children.database</code> 即路径 <code>/config/database</code>。</li>
 </ul>
-<h2 id="未解决的问题-摆烂的部分"><a href="#未解决的问题-摆烂的部分" class="headerlink" title="未解决的问题/摆烂的部分"></a>未解决的问题/摆烂的部分</h2><p>分离编译：两个文件各自继承 Base 分别编译，任意一方无法感知对方子类，所以这些操作通通按 UB 处理qwq</p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>MC 环境太特殊，标准 C++ 那套拿过来不能直接用。 最终方案大概是：类型表 + 继承链表 + 编译期内联优化混合的史山w。</p>
-<h2 id="鸣谢"><a href="#鸣谢" class="headerlink" title="鸣谢"></a>鸣谢</h2><p>感谢 4424 大佬提供的思路</p>
+<h3 id="2-3-文件节点"><a href="#2-3-文件节点" class="headerlink" title="2.3 文件节点"></a>2.3 文件节点</h3><div class="code-container" data-rel="Json5"><figure class="iseeu highlight json5"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;file&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;stat&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;size&quot;</span><span class="punctuation">:</span> <span class="number">42</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;mtime&quot;</span><span class="punctuation">:</span> <span class="number">123456</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;ctime&quot;</span><span class="punctuation">:</span> <span class="number">123000</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;owner&quot;</span><span class="punctuation">:</span> <span class="string">&quot;vfs&quot;</span></span><br><span class="line">  <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;content&quot;</span><span class="punctuation">:</span> <span class="string">&quot;&#123;\&quot;hp\&quot;: 20,\&quot;name\&quot;: \&quot;Steve\&quot;&#125;&quot;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure></div>
+<ul>
+<li><code>content</code> 存储该文件节点的 NBT 值。NBT 类型不限，由写入方决定。</li>
+<li><code>size</code> 为 <code>content</code> 序列化后的近似字节数，可选字段，为 <code>-1</code> 时表示未计算。</li>
+<li><code>content</code> 的 NBT 存储类型由对应 MCVFS 具体实现为准，但应当支持后续提及 api。</li>
+</ul>
+<h3 id="2-4-符号链接节点"><a href="#2-4-符号链接节点" class="headerlink" title="2.4 符号链接节点"></a>2.4 符号链接节点</h3><div class="code-container" data-rel="Json5"><figure class="iseeu highlight json5"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;symlink&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;stat&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;size&quot;</span><span class="punctuation">:</span> <span class="number">0</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;mtime&quot;</span><span class="punctuation">:</span> <span class="number">0</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;ctime&quot;</span><span class="punctuation">:</span> <span class="number">0</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;owner&quot;</span><span class="punctuation">:</span> <span class="string">&quot;vfs&quot;</span></span><br><span class="line">  <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;target&quot;</span><span class="punctuation">:</span> <span class="string">&quot;root.children.shared.children.config&quot;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure></div>
+<ul>
+<li><code>target</code> 存储的是 <strong>NBT 路径</strong>，而非”文件路径”。这是因为 MC 没有路径解析能力，直接存 NBT 路径可避免二次解析。</li>
+<li>工具链在序列化为 JSON 时可将 NBT 路径转换为人类可读的文件路径。</li>
+<li>循环链接检测由 API 函数在遍历时处理，超过最大深度（默认 16）即截断。</li>
+</ul>
+<hr>
+<h2 id="三、Storage-布局规范"><a href="#三、Storage-布局规范" class="headerlink" title="三、Storage 布局规范"></a>三、Storage 布局规范</h2><h3 id="3-1-命名约定"><a href="#3-1-命名约定" class="headerlink" title="3.1 命名约定"></a>3.1 命名约定</h3><div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">data storage vfs:file</span><br></pre></td></tr></table></figure></div>
+<p>MCVFS 的数据包实现应在命名空间 <code>vfs</code> 下维护一个 <code>file</code> storage。</p>
+<h3 id="3-2-顶层结构"><a href="#3-2-顶层结构" class="headerlink" title="3.2 顶层结构"></a>3.2 顶层结构</h3><div class="code-container" data-rel="Json5"><figure class="iseeu highlight json5"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// data storage vfs:file</span></span><br><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;root&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;directory&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;stat&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;size&quot;</span><span class="punctuation">:</span> <span class="number">0</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;mtime&quot;</span><span class="punctuation">:</span> <span class="number">0</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;ctime&quot;</span><span class="punctuation">:</span> <span class="number">0</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;owner&quot;</span><span class="punctuation">:</span> <span class="string">&quot;vfs&quot;</span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;children&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">      ...</span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line">  <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;meta&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;mcvfs_version&quot;</span><span class="punctuation">:</span> <span class="number">1</span><span class="punctuation">,</span></span><br><span class="line">    <span class="comment">// created 记录数据包首次加载的 gametime</span></span><br><span class="line">    <span class="attr">&quot;created&quot;</span><span class="punctuation">:</span> <span class="number">0</span><span class="punctuation">,</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure></div>
+<ul>
+<li><code>root</code> 为 VFS 根节点，必须是 directory 类型。</li>
+<li><code>meta</code> 记录协议版本和元信息，工具链读取此字段判断兼容性。</li>
+</ul>
+<h3 id="3-3-路径与-NBT-路径的映射"><a href="#3-3-路径与-NBT-路径的映射" class="headerlink" title="3.3 路径与 NBT 路径的映射"></a>3.3 路径与 NBT 路径的映射</h3><div class="table-container">
+<table>
+<thead>
+<tr>
+<th>VFS 路径</th>
+<th>NBT 路径（相对于 storage 根）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/</code></td>
+<td><code>root</code></td>
+</tr>
+<tr>
+<td><code>/config</code></td>
+<td><code>root.children.config</code></td>
+</tr>
+<tr>
+<td><code>/config/db.json</code></td>
+<td><code>root.children.config.children.&quot;db.json&quot;</code></td>
+</tr>
+<tr>
+<td><code>/players/steve</code></td>
+<td><code>root.children.players.children.steve</code></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>路径分隔符 <code>/</code> 对应 NBT 路径中的 <code>.children.</code>。</p>
+<hr>
+<h2 id="四、原生-MCF-API"><a href="#四、原生-MCF-API" class="headerlink" title="四、原生 MCF API"></a>四、原生 MCF API</h2><h3 id="4-1-标准-API-函数清单"><a href="#4-1-标准-API-函数清单" class="headerlink" title="4.1 标准 API 函数清单"></a>4.1 标准 API 函数清单</h3><p>以下函数位于命名空间 <code>vfs</code> 下。</p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>函数</th>
+<th>说明</th>
+<th>输入 (storage <code>vfs:in</code>)</th>
+<th>输出 (storage <code>vfs:out</code>)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>vfs:read</code></td>
+<td>读取文件 content</td>
+<td><code>path</code> (NBT path string)</td>
+<td><code>result</code> (NBT value)</td>
+</tr>
+<tr>
+<td><code>vfs:write</code></td>
+<td>写入文件 content</td>
+<td><code>path</code>, <code>data</code> (NBT)</td>
+<td><code>ok</code> (0b/1b)</td>
+</tr>
+<tr>
+<td><code>vfs:exists</code></td>
+<td>检查节点是否存在</td>
+<td><code>path</code></td>
+<td><code>exists</code> (0b/1b)</td>
+</tr>
+<tr>
+<td><code>vfs:delete</code></td>
+<td>删除文件节点</td>
+<td><code>path</code></td>
+<td><code>ok</code> (0b/1b)</td>
+</tr>
+<tr>
+<td><code>vfs:stat</code></td>
+<td>读取 stat 信息</td>
+<td><code>path</code></td>
+<td><code>result</code> (stat compound)</td>
+</tr>
+<tr>
+<td><code>vfs:list</code></td>
+<td>列举目录子项名</td>
+<td><code>path</code></td>
+<td><code>result</code> (list of strings)</td>
+</tr>
+<tr>
+<td><code>vfs:mkdir</code></td>
+<td>创建目录节点</td>
+<td><code>path</code></td>
+<td><code>ok</code> (0b/1b)</td>
+</tr>
+<tr>
+<td><code>vfs:walk</code></td>
+<td>递归遍历（递归函数）</td>
+<td><code>path</code></td>
+<td><code>result</code> (list of compounds)</td>
+</tr>
+<tr>
+<td><code>vfs:create_symlink</code></td>
+<td>创建符号链接</td>
+<td><code>path</code>, <code>target</code></td>
+<td><code>ok</code> (0b/1b)</td>
+</tr>
+<tr>
+<td><code>vfs:resolve</code></td>
+<td>解析路径为实际节点，处理符号链接</td>
+<td><code>path</code></td>
+<td><code>result</code> (node compound)</td>
+</tr>
+</tbody>
+</table>
+</div>
+<ul>
+<li>由于上述函数均需要动态拼接，因此需 Minecraft 1.20.2 <strong>及以上</strong>版本</li>
+</ul>
+<h3 id="4-2-错误处理"><a href="#4-2-错误处理" class="headerlink" title="4.2 错误处理"></a>4.2 错误处理</h3><p>API 通过 <code>vfs:error</code> 设置错误码代码 (数字形式) 以提示调用失败</p>
+<p>错误码对应表：</p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>错误码</th>
+<th>代码</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>OK</code></td>
+<td>0</td>
+<td>正常运行</td>
+</tr>
+<tr>
+<td><code>NOT_FOUND</code></td>
+<td>1</td>
+<td>路径不存在</td>
+</tr>
+<tr>
+<td><code>NOT_A_DIR</code></td>
+<td>2</td>
+<td>期望目录但节点为文件</td>
+</tr>
+<tr>
+<td><code>NOT_A_FILE</code></td>
+<td>3</td>
+<td>期望文件但节点为目录</td>
+</tr>
+<tr>
+<td><code>ALREADY_EXISTS</code></td>
+<td>4</td>
+<td>创建时节点已存在</td>
+</tr>
+<tr>
+<td><code>DIR_NOT_EMPTY</code></td>
+<td>5</td>
+<td>删除非空目录</td>
+</tr>
+<tr>
+<td><code>LOOP_SYMLINK</code></td>
+<td>6</td>
+<td>符号链接循环（超过 16 层）</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h3 id="4-3-初始化"><a href="#4-3-初始化" class="headerlink" title="4.3 初始化"></a>4.3 初始化</h3><p>VFS 在数据包首次加载时通过 <code>#load</code> 函数初始化：</p>
+<div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"># vfs:load（在 load.json 中注册）</span><br><span class="line"># 检查是否已初始化</span><br><span class="line">execute if data storage vfs:file root run return 0</span><br><span class="line"># 初始化根节点</span><br><span class="line">data modify storage vfs:file set value &#123;root:&#123;type:&quot;directory&quot;,stat:&#123;size:0,mtime:0,ctime:0,owner:&quot;vfs&quot;&#125;,children:&#123;&#125;&#125;,meta:&#123;mcvfs_version:1,created:0&#125;&#125;</span><br><span class="line"># 记录创建时间</span><br><span class="line">execute store result storage vfs:file meta.created int 1 run time query gametime</span><br><span class="line">execute store result storage vfs:file root.stat.ctime int 1 run time query gametime</span><br></pre></td></tr></table></figure></div>
+<hr>
+<h2 id="五、跨数据包访问"><a href="#五、跨数据包访问" class="headerlink" title="五、跨数据包访问"></a>五、跨数据包访问</h2><h3 id="5-1-命名空间约定"><a href="#5-1-命名空间约定" class="headerlink" title="5.1 命名空间约定"></a>5.1 命名空间约定</h3><p>MCVFS 统一存储于 <code>vfs:file</code>。跨包访问通过调用 VFS 提供的函数：</p>
+<div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># 读取其他数据包的配置</span><br><span class="line">data modify storage vfs:in path &quot;/shared/config&quot;</span><br><span class="line">function vfs:read</span><br><span class="line">data get storage vfs:out result</span><br></pre></td></tr></table></figure></div>
+<h3 id="5-2-权限边界"><a href="#5-2-权限边界" class="headerlink" title="5.2 权限边界"></a>5.2 权限边界</h3><ul>
+<li><code>stat.owner</code> 字段标识节点创建者。</li>
+<li><strong>注意</strong>：这只是 <strong>约定级别</strong>的保护。没有任何机制可以阻止 <code>data modify</code> 直接写入他人 storage。 该检查仅在通过标准 API<br>调用时生效（通过主动设置目标以防止错误修改），直接使用 <code>data</code> 指令可绕过。</li>
+</ul>
+<h2 id="六、局限性"><a href="#六、局限性" class="headerlink" title="六、局限性"></a>六、局限性</h2><ol>
+<li><strong>1.20.2 以下版本不可用</strong>：动态路径依赖宏，无法降级实现。</li>
+<li><strong>NBT 路径深度限制</strong>：建议目录深度不超过 8 层。</li>
+<li><strong>无强制权限隔离</strong>：<code>owner</code> 仅约定级别，<code>data modify</code> 可绕过。</li>
+<li><strong>性能较差</strong>：调用过程中检查较多。</li>
+</ol>
 
 		</div>
 
@@ -597,10 +816,10 @@
 		<div class="post-copyright-info w-full my-8 px-2 sm:px-6 md:px-8">
 			<div class="article-copyright-info-container">
     <ul>
-        <li><strong>标题:</strong> 在 Minecraft 里实现 OOP 的一些想法</li>
+        <li><strong>标题:</strong> Minecraft 数据包虚拟文件系统协议规范倡议──统一数据包持久化存储格式</li>
         <li><strong>作者:</strong> 771835</li>
         <li><strong>创建于
-                :</strong> 2026-08-13 22:58:54</li>
+                :</strong> 2026-08-14 03:26:57</li>
         
             <li>
                 <strong>更新于
@@ -608,7 +827,7 @@
             </li>
         
         <li>
-            <strong>链接:</strong> https://771835.github.io/2026/08/13/在-Minecraft-里实现-OOP-的一些想法/
+            <strong>链接:</strong> https://771835.github.io/2026/08/14/Minecraft-数据包虚拟文件系统协议规范倡议──统一数据包持久化存储格式/
         </li>
         <li>
             <strong>
@@ -634,7 +853,19 @@
 			</li>
 			
 			<li class="tag-item mx-0.5">
-				<a href="/tags/dovetail/">#dovetail</a>&nbsp;
+				<a href="/tags/datapack/">#datapack</a>&nbsp;
+			</li>
+			
+			<li class="tag-item mx-0.5">
+				<a href="/tags/vfs/">#vfs</a>&nbsp;
+			</li>
+			
+			<li class="tag-item mx-0.5">
+				<a href="/tags/protocol/">#protocol</a>&nbsp;
+			</li>
+			
+			<li class="tag-item mx-0.5">
+				<a href="/tags/spec/">#spec</a>&nbsp;
 			</li>
 			
 		</ul>
@@ -646,17 +877,29 @@
 		<div class="article-nav my-8 flex justify-between items-center px-2 sm:px-6 md:px-8">
 			
 			<div class="article-prev border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
-				<a class="prev" rel="prev" href="/2026/08/14/Minecraft-%E6%95%B0%E6%8D%AE%E5%8C%85%E8%99%9A%E6%8B%9F%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E5%8D%8F%E8%AE%AE%E8%A7%84%E8%8C%83%E5%80%A1%E8%AE%AE%E2%94%80%E2%94%80%E7%BB%9F%E4%B8%80%E6%95%B0%E6%8D%AE%E5%8C%85%E6%8C%81%E4%B9%85%E5%8C%96%E5%AD%98%E5%82%A8%E6%A0%BC%E5%BC%8F/">
+				<a class="prev" rel="prev" href="/2026/08/14/hello-world/">
 					<span class="left arrow-icon flex justify-center items-center">
 						<i class="fa-solid fa-chevron-left"></i>
 					</span>
 					<span class="title flex justify-center items-center">
-						<span class="post-nav-title-item truncate max-w-48">Minecraft 数据包虚拟文件系统协议规范倡议──统一数据包持久化存储格式</span>
+						<span class="post-nav-title-item truncate max-w-48">Hello World</span>
 						<span class="post-nav-item">上一篇</span>
 					</span>
 				</a>
 			</div>
 			
+			
+			<div class="article-next border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
+				<a class="next" rel="next" href="/2026/08/13/%E5%9C%A8-Minecraft-%E9%87%8C%E5%AE%9E%E7%8E%B0-OOP-%E7%9A%84%E4%B8%80%E4%BA%9B%E6%83%B3%E6%B3%95/">
+					<span class="title flex justify-center items-center">
+						<span class="post-nav-title-item truncate max-w-48">在 Minecraft 里实现 OOP 的一些想法</span>
+						<span class="post-nav-item">下一篇</span>
+					</span>
+					<span class="right arrow-icon flex justify-center items-center">
+						<i class="fa-solid fa-chevron-right"></i>
+					</span>
+				</a>
+			</div>
 			
 		</div>
 		
@@ -670,8 +913,8 @@
 		<div class="post-toc-wrap">
 	<div class="post-toc">
 		<div class="toc-title">目录</div>
-		<div class="page-title">在 Minecraft 里实现 OOP 的一些想法</div>
-		<ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%B5%B7%E5%9B%A0"><span class="nav-text">起因</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A4%9A%E6%80%81%E7%9A%84%E4%B8%A4%E7%A7%8D%E5%88%9D%E6%AD%A5%E6%96%B9%E6%A1%88"><span class="nav-text">多态的两种初步方案</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%B9%E6%A1%88%E4%B8%80%EF%BC%9A%E7%BC%96%E8%AF%91%E5%99%A8%E5%B1%95%E5%BC%80-isinstance-%E5%88%86%E6%94%AF"><span class="nav-text">方案一：编译器展开 isinstance 分支</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%B9%E6%A1%88%E4%BA%8C%EF%BC%9A%E7%B1%BB%E5%9E%8B%E8%A1%A8-%E7%BB%A7%E6%89%BF%E9%93%BE%E8%A1%A8%EF%BC%88%E5%9F%BA%E4%BA%8E%E5%87%BD%E6%95%B0%E8%B7%AF%E5%BE%84%EF%BC%89"><span class="nav-text">方案二：类型表 + 继承链表（基于函数路径）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Minecraft-%E7%8E%AF%E5%A2%83%E7%9A%84%E7%89%B9%E6%AE%8A%E6%80%A7"><span class="nav-text">Minecraft 环境的特殊性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%AA%E8%A7%A3%E5%86%B3%E7%9A%84%E9%97%AE%E9%A2%98-%E6%91%86%E7%83%82%E7%9A%84%E9%83%A8%E5%88%86"><span class="nav-text">未解决的问题&#x2F;摆烂的部分</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-text">总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%B8%A3%E8%B0%A2"><span class="nav-text">鸣谢</span></a></li></ol>
+		<div class="page-title">Minecraft 数据包虚拟文件系统协议规范倡议──统一数据包持久化存储格式</div>
+		<ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%83%8C%E6%99%AF%E4%B8%8E%E5%8A%A8%E6%9C%BA"><span class="nav-text">背景与动机</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E6%A0%B8%E5%BF%83%E6%A6%82%E5%BF%B5"><span class="nav-text">一、核心概念</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-%E4%BB%80%E4%B9%88%E6%98%AF%E2%80%9D%E8%99%9A%E6%8B%9F%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E2%80%9D"><span class="nav-text">1.1 什么是”虚拟文件系统”</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-%E4%B8%8E-data-scoreboard-%E6%8C%87%E4%BB%A4%E7%9A%84%E5%85%B3%E7%B3%BB"><span class="nav-text">1.2 与 data&#x2F;scoreboard 指令的关系</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E8%8A%82%E7%82%B9%E6%A0%91%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84"><span class="nav-text">二、节点树数据结构</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-%E8%8A%82%E7%82%B9%E5%AE%9A%E4%B9%89"><span class="nav-text">2.1 节点定义</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-%E7%9B%AE%E5%BD%95%E8%8A%82%E7%82%B9"><span class="nav-text">2.2 目录节点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-%E6%96%87%E4%BB%B6%E8%8A%82%E7%82%B9"><span class="nav-text">2.3 文件节点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-4-%E7%AC%A6%E5%8F%B7%E9%93%BE%E6%8E%A5%E8%8A%82%E7%82%B9"><span class="nav-text">2.4 符号链接节点</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81Storage-%E5%B8%83%E5%B1%80%E8%A7%84%E8%8C%83"><span class="nav-text">三、Storage 布局规范</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-%E5%91%BD%E5%90%8D%E7%BA%A6%E5%AE%9A"><span class="nav-text">3.1 命名约定</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-%E9%A1%B6%E5%B1%82%E7%BB%93%E6%9E%84"><span class="nav-text">3.2 顶层结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-3-%E8%B7%AF%E5%BE%84%E4%B8%8E-NBT-%E8%B7%AF%E5%BE%84%E7%9A%84%E6%98%A0%E5%B0%84"><span class="nav-text">3.3 路径与 NBT 路径的映射</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B%E3%80%81%E5%8E%9F%E7%94%9F-MCF-API"><span class="nav-text">四、原生 MCF API</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#4-1-%E6%A0%87%E5%87%86-API-%E5%87%BD%E6%95%B0%E6%B8%85%E5%8D%95"><span class="nav-text">4.1 标准 API 函数清单</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-2-%E9%94%99%E8%AF%AF%E5%A4%84%E7%90%86"><span class="nav-text">4.2 错误处理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-3-%E5%88%9D%E5%A7%8B%E5%8C%96"><span class="nav-text">4.3 初始化</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%94%E3%80%81%E8%B7%A8%E6%95%B0%E6%8D%AE%E5%8C%85%E8%AE%BF%E9%97%AE"><span class="nav-text">五、跨数据包访问</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#5-1-%E5%91%BD%E5%90%8D%E7%A9%BA%E9%97%B4%E7%BA%A6%E5%AE%9A"><span class="nav-text">5.1 命名空间约定</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-2-%E6%9D%83%E9%99%90%E8%BE%B9%E7%95%8C"><span class="nav-text">5.2 权限边界</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AD%E3%80%81%E5%B1%80%E9%99%90%E6%80%A7"><span class="nav-text">六、局限性</span></a></li></ol>
 
 	</div>
 </div>

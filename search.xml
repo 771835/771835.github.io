@@ -1,55 +1,286 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>Minecraft 数据包虚拟文件系统协议规范倡议──统一数据包持久化存储格式</title>
+    <url>/2026/08/14/Minecraft-%E6%95%B0%E6%8D%AE%E5%8C%85%E8%99%9A%E6%8B%9F%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E5%8D%8F%E8%AE%AE%E8%A7%84%E8%8C%83%E5%80%A1%E8%AE%AE%E2%94%80%E2%94%80%E7%BB%9F%E4%B8%80%E6%95%B0%E6%8D%AE%E5%8C%85%E6%8C%81%E4%B9%85%E5%8C%96%E5%AD%98%E5%82%A8%E6%A0%BC%E5%BC%8F/</url>
+    <content><![CDATA[背景与动机当前 Minecraft 数据包（Datapack）对于游戏内数据存储普遍采用data与scoreboard指令的方式手动存储数据，这种方式存在以下问题：
+
+数据组织碎片化：每个数据包自行决定 storage 路径和 scoreboard objective 命名，无统一规范，冲突频发。
+跨包数据交换困难：数据包 A 无法以标准方式发现和访问数据包 B 的数据，只能靠硬编码 storage 名约定。
+数据生命周期不可追踪：storage 中的数据无元信息（创建时间、修改时间、类型），调试时只能盲猜。
+
+这种方式难以追踪和管理数据，且多个数据包之间难以统一的方式修改数据和交换数据，游戏外工具也难以方便地管理数据。
+本文提出 Minecraft 数据包虚拟文件系统协议（MCVFS），本质上是 对 data storage 中 NBT 数据的标准化组织方案，而非在MC 内部实现一个真正的文件系统。协议包含两个层面：
+
+节点树序列化格式：统一的 JSON 结构，用于工具链间数据交换与编译产物快照。
+原生 MCF API：一组标准 .mcfunction 函数，在运行时通过 data 指令操作 storage 中的 VFS 节点树。
+
+
+一、核心概念1.1 什么是”虚拟文件系统”MCVFS 不是一个真正的文件系统。MC 没有文件系统 API，没有指针，没有系统调用。 MCVFS 的实质是 一套约定，安全的操作 NBT以模拟真实的文件系统。MCVFS 是全局单例，仅由首个加载的数据包初始化。
+“文件”、”目录”、”路径”等术语原意指代真实文件系统中的内容，此处是 对 NBT 节点的别称，便于理解和规范数据布局。
+1.2 与 data/scoreboard 指令的关系MCVFS 不取代 data 和 scoreboard 指令，仅作为提供标准访问函数的数据存储与交互工具。
+
+二、节点树数据结构2.1 节点定义每个 VFS 节点是一个 NBT Compound，统一结构如下：
+&#123;  // &quot;directory&quot; | &quot;file&quot; | &quot;symlink&quot;  &quot;type&quot;: &quot;directory&quot;,  &quot;stat&quot;: &#123;    &quot;size&quot;: 0,    // 游戏刻时间戳（tick），非 Unix 时间戳    &quot;mtime&quot;: 0,    // 创建刻    &quot;ctime&quot;: 0,    // 创建者标识    &quot;owner&quot;: &quot;vfs&quot;  &#125;&#125;
+
+时间戳使用 游戏刻（gametime），通过 execute store ... run time query gametime 获取。
+owner 记录创建该节点的标识，用于多包场景下的权限边界。
+size 仅对 file 节点有意义，目录固定为 0。
+
+2.2 目录节点&#123;  &quot;type&quot;: &quot;directory&quot;,  &quot;stat&quot;: &#123;    &quot;size&quot;: 0,    &quot;mtime&quot;: 0,    &quot;ctime&quot;: 0,    &quot;owner&quot;: &quot;vfs&quot;  &#125;,  &quot;children&quot;: &#123;    &quot;config.json&quot;: &#123;      &quot;type&quot;: &quot;file&quot;,      &quot;stat&quot;: &#123;        ...      &#125;,      &quot;content&quot;: &quot;&#123;...NBT...&#125;&quot;    &#125;,    &quot;players&quot;: &#123;      &quot;type&quot;: &quot;directory&quot;,      &quot;stat&quot;: &#123;        ...      &#125;,      &quot;children&quot;: &#123;        ...      &#125;    &#125;  &#125;,  // _index 由 API 函数在增删子节点时自动维护  &quot;_index&quot;: [&quot;a&quot;, &quot;b&quot;]&#125;
+
+children 为 NBT Compound，键为节点名（即”文件名”），值为子节点。
+空目录的 children 为空 Compound {}。
+NBT 路径对应文件路径：root.children.config.children.database 即路径 /config/database。
+
+2.3 文件节点&#123;  &quot;type&quot;: &quot;file&quot;,  &quot;stat&quot;: &#123;    &quot;size&quot;: 42,    &quot;mtime&quot;: 123456,    &quot;ctime&quot;: 123000,    &quot;owner&quot;: &quot;vfs&quot;  &#125;,  &quot;content&quot;: &quot;&#123;\&quot;hp\&quot;: 20,\&quot;name\&quot;: \&quot;Steve\&quot;&#125;&quot;&#125;
+
+content 存储该文件节点的 NBT 值。NBT 类型不限，由写入方决定。
+size 为 content 序列化后的近似字节数，可选字段，为 -1 时表示未计算。
+content 的 NBT 存储类型由对应 MCVFS 具体实现为准，但应当支持后续提及 api。
+
+2.4 符号链接节点&#123;  &quot;type&quot;: &quot;symlink&quot;,  &quot;stat&quot;: &#123;    &quot;size&quot;: 0,    &quot;mtime&quot;: 0,    &quot;ctime&quot;: 0,    &quot;owner&quot;: &quot;vfs&quot;  &#125;,  &quot;target&quot;: &quot;root.children.shared.children.config&quot;&#125;
+
+target 存储的是 NBT 路径，而非”文件路径”。这是因为 MC 没有路径解析能力，直接存 NBT 路径可避免二次解析。
+工具链在序列化为 JSON 时可将 NBT 路径转换为人类可读的文件路径。
+循环链接检测由 API 函数在遍历时处理，超过最大深度（默认 16）即截断。
+
+
+三、Storage 布局规范3.1 命名约定data storage vfs:file
+MCVFS 的数据包实现应在命名空间 vfs 下维护一个 file storage。
+3.2 顶层结构// data storage vfs:file&#123;  &quot;root&quot;: &#123;    &quot;type&quot;: &quot;directory&quot;,    &quot;stat&quot;: &#123;      &quot;size&quot;: 0,      &quot;mtime&quot;: 0,      &quot;ctime&quot;: 0,      &quot;owner&quot;: &quot;vfs&quot;    &#125;,    &quot;children&quot;: &#123;      ...    &#125;  &#125;,  &quot;meta&quot;: &#123;    &quot;mcvfs_version&quot;: 1,    // created 记录数据包首次加载的 gametime    &quot;created&quot;: 0,  &#125;&#125;
+
+root 为 VFS 根节点，必须是 directory 类型。
+meta 记录协议版本和元信息，工具链读取此字段判断兼容性。
+
+3.3 路径与 NBT 路径的映射
+
+
+
+VFS 路径
+NBT 路径（相对于 storage 根）
+
+
+
+
+/
+root
+
+
+/config
+root.children.config
+
+
+/config/db.json
+root.children.config.children.&quot;db.json&quot;
+
+
+/players/steve
+root.children.players.children.steve
+
+
+
+
+路径分隔符 / 对应 NBT 路径中的 .children.。
+
+四、原生 MCF API4.1 标准 API 函数清单以下函数位于命名空间 vfs 下。
+
+
+
+
+函数
+说明
+输入 (storage vfs:in)
+输出 (storage vfs:out)
+
+
+
+
+vfs:read
+读取文件 content
+path (NBT path string)
+result (NBT value)
+
+
+vfs:write
+写入文件 content
+path, data (NBT)
+ok (0b/1b)
+
+
+vfs:exists
+检查节点是否存在
+path
+exists (0b/1b)
+
+
+vfs:delete
+删除文件节点
+path
+ok (0b/1b)
+
+
+vfs:stat
+读取 stat 信息
+path
+result (stat compound)
+
+
+vfs:list
+列举目录子项名
+path
+result (list of strings)
+
+
+vfs:mkdir
+创建目录节点
+path
+ok (0b/1b)
+
+
+vfs:walk
+递归遍历（递归函数）
+path
+result (list of compounds)
+
+
+vfs:create_symlink
+创建符号链接
+path, target
+ok (0b/1b)
+
+
+vfs:resolve
+解析路径为实际节点，处理符号链接
+path
+result (node compound)
+
+
+
+
+
+由于上述函数均需要动态拼接，因此需 Minecraft 1.20.2 及以上版本
+
+4.2 错误处理API 通过 vfs:error 设置错误码代码 (数字形式) 以提示调用失败
+错误码对应表：
+
+
+
+
+错误码
+代码
+含义
+
+
+
+
+OK
+0
+正常运行
+
+
+NOT_FOUND
+1
+路径不存在
+
+
+NOT_A_DIR
+2
+期望目录但节点为文件
+
+
+NOT_A_FILE
+3
+期望文件但节点为目录
+
+
+ALREADY_EXISTS
+4
+创建时节点已存在
+
+
+DIR_NOT_EMPTY
+5
+删除非空目录
+
+
+LOOP_SYMLINK
+6
+符号链接循环（超过 16 层）
+
+
+
+
+4.3 初始化VFS 在数据包首次加载时通过 #load 函数初始化：
+# vfs:load（在 load.json 中注册）# 检查是否已初始化execute if data storage vfs:file root run return 0# 初始化根节点data modify storage vfs:file set value &#123;root:&#123;type:&quot;directory&quot;,stat:&#123;size:0,mtime:0,ctime:0,owner:&quot;vfs&quot;&#125;,children:&#123;&#125;&#125;,meta:&#123;mcvfs_version:1,created:0&#125;&#125;# 记录创建时间execute store result storage vfs:file meta.created int 1 run time query gametimeexecute store result storage vfs:file root.stat.ctime int 1 run time query gametime
+
+五、跨数据包访问5.1 命名空间约定MCVFS 统一存储于 vfs:file。跨包访问通过调用 VFS 提供的函数：
+# 读取其他数据包的配置data modify storage vfs:in path &quot;/shared/config&quot;function vfs:readdata get storage vfs:out result
+5.2 权限边界
+stat.owner 字段标识节点创建者。
+注意：这只是 约定级别的保护。没有任何机制可以阻止 data modify 直接写入他人 storage。 该检查仅在通过标准 API调用时生效（通过主动设置目标以防止错误修改），直接使用 data 指令可绕过。
+
+六、局限性
+1.20.2 以下版本不可用：动态路径依赖宏，无法降级实现。
+NBT 路径深度限制：建议目录深度不超过 8 层。
+无强制权限隔离：owner 仅约定级别，data modify 可绕过。
+性能较差：调用过程中检查较多。
+
+]]></content>
+      <categories>
+        <category>Minecraft Datapack</category>
+      </categories>
+      <tags>
+        <tag>minecraft</tag>
+        <tag>datapack</tag>
+        <tag>vfs</tag>
+        <tag>protocol</tag>
+        <tag>spec</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Hello World</title>
+    <url>/2026/08/14/hello-world/</url>
+    <content><![CDATA[Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub.
+Quick StartCreate a new post$ hexo new &quot;My New Post&quot;
+More info: Writing
+Run server$ hexo server
+More info: Server
+Generate static files$ hexo generate
+More info: Generating
+Deploy to remote sites$ hexo deploy
+More info: Deployment
+]]></content>
+  </entry>
+  <entry>
     <title>在 Minecraft 里实现 OOP 的一些想法</title>
     <url>/2026/08/13/%E5%9C%A8-Minecraft-%E9%87%8C%E5%AE%9E%E7%8E%B0-OOP-%E7%9A%84%E4%B8%80%E4%BA%9B%E6%83%B3%E6%B3%95/</url>
     <content><![CDATA[起因Dovetail 的 OOP 一直是缺少实现，只有空话的。所以 最近在讨论 Dovetail 要不要引入 OOP 支持， 顺带聊了多态、 RTTI、虚函数表在Minecraft 环境下怎么实现。 以下是一些不成熟的设想，以实际实现为准（
 多态的两种初步方案背景伪代码：
 class Base:    def kill(self): passclass Cat(Base):    def kill(self): print(&quot;Killing cat&quot;)class Dog(Base):    def kill(self): print(&quot;Killing dog&quot;)def kill(obj: Base):    obj.kill()
-
 方案一：编译器展开 isinstance 分支obj.kill () 在编译时展开为：
 if type(obj) == Cat:    Cat.kill(obj)elif type(obj) == Dog:    Dog.kill(obj)
-
 
 优点：简单
 缺点：子类数量一多，生成代码膨胀，性能堪忧
 
 方案二：类型表 + 继承链表（基于函数路径）Lua 风格伪代码：
 Base = &#123; foo = &quot;base/foo&quot; &#125;Cat  = &#123; foo = &quot;base/foo&quot;, kill = &quot;cat/kill&quot; &#125;Dog  = &#123; foo = &quot;dog/foo&quot;,  kill = &quot;dog/kill&quot; &#125;types = &#123; [1]=Base, [2]=Cat, [3]=Dog &#125;super = &#123; [2]=&#123;1&#125;, [3]=&#123;1&#125; &#125;-- obj.kill() 编译为：-- types[obj.type].kill
-
 每个对象携带整数类型 ID，调用时查 types 表拿到方法路径，再执行。 继承链通过 super 表记录，编译期通过C3算法线性化继承链，查找时沿着线性链查找。同时无子类的类直接编译期内联，跳过查表
 Minecraft 环境的特殊性
 MC 没有指针，跳表通过函数路径 + function 宏模拟
 跨编译单元的多态暂属 UB，OOP 类型设想不允许跨模块导出
 
-未解决的问题&#x2F;摆烂的部分分离编译：两个文件各自继承 Base 分别编译，任意一方无法感知对方子类，所以这些操作通通按 UB 处理qwq
+未解决的问题/摆烂的部分分离编译：两个文件各自继承 Base 分别编译，任意一方无法感知对方子类，所以这些操作通通按 UB 处理qwq
 总结MC 环境太特殊，标准 C++ 那套拿过来不能直接用。 最终方案大概是：类型表 + 继承链表 + 编译期内联优化混合的史山w。
 鸣谢感谢 4424 大佬提供的思路
 ]]></content>
       <categories>
-        <category>OOP</category>
+        <category>Minecraft Datapack</category>
       </categories>
       <tags>
-        <tag>dovetail</tag>
         <tag>minecraft</tag>
+        <tag>dovetail</tag>
       </tags>
-  </entry>
-  <entry>
-    <title>Hello World</title>
-    <url>/2026/08/13/hello-world/</url>
-    <content><![CDATA[Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub.
-Quick StartCreate a new post$ hexo new &quot;My New Post&quot;
-
-More info: Writing
-Run server$ hexo server
-
-More info: Server
-Generate static files$ hexo generate
-
-More info: Generating
-Deploy to remote sites$ hexo deploy
-
-More info: Deployment
-]]></content>
   </entry>
 </search>
