@@ -84,7 +84,7 @@
     
     <!--- Seo Part-->
     
-    <link rel="canonical" href="https://771835.github.io/essays/"/>
+    <link rel="canonical" href="https://771835.github.io/rickroll/"/>
     <meta name="robots" content="index,follow">
     <meta name="googlebot" content="index,follow">
     <meta name="revisit-after" content="1 days">
@@ -93,13 +93,13 @@
         
         <meta name="description" content="一个混吃等死的废物喵。">
 <meta property="og:type" content="website">
-<meta property="og:title" content="说说">
-<meta property="og:url" content="https://771835.github.io/essays/index.html">
+<meta property="og:title" content="正在加载...">
+<meta property="og:url" content="https://771835.github.io/rickroll/index.html">
 <meta property="og:site_name" content="Hexo">
 <meta property="og:description" content="一个混吃等死的废物喵。">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://771835.github.io/images/redefine-og.webp">
-<meta property="article:published_time" content="2026-08-15T10:55:33.710Z">
+<meta property="article:published_time" content="0722-01-14T00:00:00.000Z">
 <meta property="article:modified_time" content="2026-08-15T10:55:33.710Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary">
@@ -115,7 +115,7 @@
     
     <title>
         
-            说说 | 771835的博客
+            正在加载... | 771835的博客
         
     </title>
 
@@ -222,7 +222,7 @@
 
                             <li class="navbar-item">
                                 <!-- Menu -->
-                                <a class="active"
+                                <a class=""
                                    href="/essays/"
                                         >
                                     <i class="fa-regular fa-comment fa-fw"></i>
@@ -344,7 +344,7 @@
 
                     <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
                         
-                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full active"
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
                            href="/essays/"
                         >
                             <span>
@@ -480,36 +480,45 @@
 	
 
 	
-	<div class="mb-4">
-	<h1 class="page-title-header">说说</h1>
-	<ul class="flex flex-col mb-4 gap-6">
-		
-		
-		<li class="w-full flex flex-row relative">
-			<div class="w-10 h-10 mr-4 rounded-lg overflow-hidden border border-border-color p-[1px] shrink-0">
-				<img src="https://api.dicebear.com/7.x/bottts-neutral/svg?seed=771835" class="w-full h-full rounded-[6.2px]">
-			</div>
-			<div class="w-full border-border-color rounded-xl rounded-tl-none shadow-redefine-flat overflow-hidden">
-				<!-- Pass the raw date here in a data attribute -->
-				
-				<div class="essay-date px-4 py-1.5 text-sm border-b border-border-color bg-zinc-50 dark:bg-zinc-800 text-third-text-color" data-date="2025-08-14T08:00:00+08:00">Loading Date...</div>
-				<div id="shuoshuo-content" class="px-4 py-2"><p>喵喵喵?写条说说都要在配置文件里改，好麻烦。</p>
-</div>
-			</div>
-			<div class="absolute left-[50.5px] top-3 transform w-2 h-2 border-solid border-t border-l bg-zinc-50 -rotate-45 border-border-color dark:bg-zinc-800"></div>
-		</li>
-		
-	</ul>
-</div>
-	
 
 	<div class="page-template-content markdown-body">
 		
+		<h1>正在加载...</h1>
+		
 
-		<!-- 格式
-- content: 文字
-    date: 2025-08-13
--->
+		<div style="text-align: center; margin-top: 50px;">
+    <h2>正在为您跳转到精彩内容...</h2>
+    <p>如果没有自动跳转，请刷新页面。</p>
+</div>
+
+<script>
+setTimeout(function() {
+    try {
+        // 方法1：检查时区是否为中国时区 (东八区)
+        const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+        // 方法2：检查浏览器语言
+        const language = navigator.language || navigator.userLanguage;
+
+        // 判断逻辑：如果是中国时区，或者浏览器语言是中文，则判定为国内用户
+        const isChina = (timezone === 'Asia/Shanghai' || timezone === 'Asia/Chongqing' || timezone === 'Asia/Urumqi') || 
+                        (language && language.toLowerCase().startsWith('zh'));
+
+        if (isChina) {
+            // 国内跳转 B站
+            window.location.href = 'https://www.bilibili.com/video/BV1GJ411x7h7';
+        } else {
+            // 国外跳转 YouTube
+            window.location.href = 'https://www.youtube.com/watch?v=dQw4w9WgXcQ';
+        }
+    } catch (e) {
+        // 极端情况兜底：默认去 YouTube
+        window.location.href = 'https://www.youtube.com/watch?v=dQw4w9WgXcQ';
+    }
+}, 800);
+</script>
+
+
 	</div>
 
 	<div class="page-template-comments">
