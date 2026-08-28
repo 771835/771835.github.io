@@ -99,8 +99,8 @@
 <meta property="og:description" content="一个混吃等死的废物喵。">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://771835.github.io/images/redefine-og.webp">
-<meta property="article:published_time" content="2026-08-28T12:25:45.820Z">
-<meta property="article:modified_time" content="2026-08-28T12:25:45.820Z">
+<meta property="article:published_time" content="2026-08-28T15:15:36.678Z">
+<meta property="article:modified_time" content="2026-08-28T15:15:36.678Z">
 <meta property="article:author" content="771835">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://771835.github.io/images/redefine-og.webp">
@@ -728,6 +728,7 @@
 
         #output-content {
             flex: 1;
+            overflow-y: auto !important;
             overflow: auto;
             padding: 10px 12px;
             font-family: 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
@@ -967,6 +968,16 @@
         <option value="2" selected>O2</option>
         <option value="3">O3</option>
     </select>
+
+    <label style="display: flex; align-items: center; gap: 5px; cursor: pointer;">
+        <input type="checkbox" id="recursion-cb" style="cursor: pointer;">
+        <span>递归</span>
+    </label>
+
+    <label style="display: flex; align-items: center; gap: 5px; cursor: pointer;">
+        <input type="checkbox" id="experimental-cb" style="cursor: pointer;">
+        <span>实验性功能</span>
+    </label>
 
     <div class="toolbar-sep"></div>
 
@@ -1227,7 +1238,7 @@ sys.path.insert(0, '/dovetail-project')
             setLoadProgress(95, '正在加载 Dovetail Online IDE', '预热完成');
             pyodide.runPython(`
 import json
-json.dumps(compile_online("fn main() { say(1); }", namespace="__warmup__"))
+json.dumps(compile_online("fn main() { print(1); }", namespace="__warmup__"))
       `);
 
             // 阶段 5: 就绪
@@ -1266,6 +1277,8 @@ json.dumps(compile_online("fn main() { say(1); }", namespace="__warmup__"))
         const code = editor.getValue();
         const mcVersion = document.getElementById('mc-version').value;
         const optLevel = parseInt(document.getElementById('opt-level').value);
+        const recursion = String(document.getElementById('recursion-cb').checked);
+        const experimental = String(document.getElementById('experimental-cb').checked);
 
         const startTime = performance.now();
 
@@ -1281,6 +1294,8 @@ json.dumps(compile_online(
     mc_version=${JSON.stringify(mcVersion)},
     opt_level=${optLevel},
     debug=False,
+    recursion=${recursion[0].toUpperCase()}${recursion.slice(1)},
+    experimental=${experimental[0].toUpperCase()}${experimental.slice(1)},
 ))
       `);
             const result = JSON.parse(resultJson);
