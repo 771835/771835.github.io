@@ -24,15 +24,15 @@ setTimeout(function() {
 
         if (isChina) {
             // 国内跳转 B站
-            window.location.href = 'https://www.bilibili.com/video/BV1GJ411x7h7';
+            window.location.replace('https://www.bilibili.com/video/BV1GJ411x7h7');
         } else {
             // 国外跳转 YouTube
-            window.location.href = 'https://www.youtube.com/watch?v=dQw4w9WgXcQ';
+            window.location.replace('https://www.youtube.com/watch?v=dQw4w9WgXcQ');
         }
     } catch (e) {
         // 极端情况兜底：默认去 YouTube
-        window.location.href = 'https://www.youtube.com/watch?v=dQw4w9WgXcQ';
+        window.location.replace('https://www.youtube.com/watch?v=dQw4w9WgXcQ');
     }
-}, 800);
+}, 100);
 </script>
 
