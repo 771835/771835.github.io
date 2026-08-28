@@ -239,20 +239,6 @@ NBT 路径深度限制：建议目录深度不超过 8 层。
       </tags>
   </entry>
   <entry>
-    <title>Hello World</title>
-    <url>/2026/08/15/hello-world/</url>
-    <content><![CDATA[Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub.
-Quick StartCreate a new post$ hexo new &quot;My New Post&quot;
-More info: Writing
-Run server$ hexo server
-More info: Server
-Generate static files$ hexo generate
-More info: Generating
-Deploy to remote sites$ hexo deploy
-More info: Deployment
-]]></content>
-  </entry>
-  <entry>
     <title>在 Minecraft 里实现 OOP 的一些想法</title>
     <url>/2026/08/13/%E5%9C%A8-Minecraft-%E9%87%8C%E5%AE%9E%E7%8E%B0-OOP-%E7%9A%84%E4%B8%80%E4%BA%9B%E6%83%B3%E6%B3%95/</url>
     <content><![CDATA[起因Dovetail 的 OOP 一直是缺少实现，只有空话的。所以 最近在讨论 Dovetail 要不要引入 OOP 支持， 顺带聊了多态、 RTTI、虚函数表在Minecraft 环境下怎么实现。 以下是一些不成熟的设想，以实际实现为准（
