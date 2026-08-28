@@ -526,8 +526,8 @@
 </div>
 
 <!-- ========== CDN 依赖 ========== -->
-<script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.47.0/min/vs/loader.js"></script>
-<script src="https://cdn.jsdelivr.net/pyodide/v0.26.1/full/pyodide.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/monaco-editor@v0.55.1/min/vs/loader.js"></script>
+<script src="https://cdn.jsdelivr.net/pyodide/v314.0.6/full/pyodide.js"></script>
 
 <script>
     // ============================================================
@@ -558,7 +558,7 @@
     // 初始化 Monaco Editor
     // ============================================================
     require.config({
-        paths: {vs: 'https://cdn.jsdelivr.net/npm/monaco-editor@0.47.0/min/vs'}
+        paths: {vs: 'https://cdn.jsdelivr.net/npm/monaco-editor@v0.55.1/min/vs'}
     });
 
     require(['vs/editor/editor.main'], async function (monaco) {
@@ -705,9 +705,16 @@
             // 阶段 1: 加载 Pyodide 运行时
             setLoadProgress(5, '正在加载 Dovetail Online IDE', '下载 Pyodide 运行时 (~20MB)...');
 
+            // 判断是否为中文环境
+            const isZh = navigator.language.startsWith('zh') || /zh|cn/i.test(navigator.language);
+            const pyodideUrl = isZh
+                ? 'https://cdn.jsdmirror.cn/pyodide/v314.0.6/full/'
+                : 'https://cdn.jsdelivr.net/pyodide/v314.0.6/full/';
+
             pyodide = await loadPyodide({
-                indexURL: 'https://cdn.jsdelivr.net/pyodide/v0.26.1/full/'
+                indexURL: pyodideUrl
             });
+
             setLoadProgress(40, '正在加载 Dovetail Online IDE', 'Pyodide 运行时已就绪');
 
             // 阶段 2: 安装依赖
