@@ -3,7 +3,7 @@
 ## Source: https://github.com/hexojs/hexo/
 
 # Site
-title: 771835µÄ²©¿Í
+title: 771835ï¿½Ä²ï¿½ï¿½ï¿½
 subtitle: ''
 description: ''
 keywords:
@@ -108,3 +108,4 @@ deploy:
 search:
   path: search.xml
   field: post
+
